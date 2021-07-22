@@ -6,6 +6,13 @@
 
 <h1>Delete Events</h1>
 
+@if (ViewBag.events.Count == 0)
+{
+    <p>There are no events yet.</p>
+}
+else
+{
+
 <form method="post">
     @foreach (var evt in ViewBag.Events)
     {
@@ -18,3 +25,4 @@
     }
     <input type="submit" name="Delete Selected Events" class="btn btn-danger" />
 </form>
+}
