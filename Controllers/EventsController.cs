@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CodingEvents.Data;
+using CodingEvents.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +11,10 @@ namespace CodingEvents.Controllers
     public class EventsController : Controller
 
     {
-        //static private List<string> Events = new List<string>();
-       static private Dictionary<string, string> Events = new Dictionary<string, string>();
-
-
         [HttpGet]
         public IActionResult Index()
         {
-        ViewBag.events = Events;
+        ViewBag.events = EventData.GetAll();
 
         return View();
         }
@@ -27,15 +25,41 @@ namespace CodingEvents.Controllers
             return View();
         }
 
+        //[HttpPost]
+        //[Route("/Events/Add")]
+        //public IActionResult NewEvent(string eventName, string eventDescription)
+        //{
+        //    EventData.Add(new Event(eventName, eventDescription));
+
+        //    return Redirect("/Events");
+        //}
+
+
+        //Using model binding. Make sure the form names match the Event class's properties. Case does not matter. See above fore what it is replacing.
         [HttpPost]
         [Route("/Events/Add")]
-        public IActionResult NewEvent(string eventName, string eventDescription)
+        public IActionResult NewEvent(Event newEvent)
         {
-            Events.Add(eventName, eventDescription);
+            EventData.Add(newEvent);
 
             return Redirect("/Events");
         }
 
+        public IActionResult Delete()
+        {
+            ViewBag.events = EventData.GetAll();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int[] eventsIds)
+        {
+            foreach (int eventId in eventsIds)
+            {
+                EventData.Remove(eventId);
+            }
+            return Redirect("/Events");
+        }
 
     }
 }
